@@ -1,7 +1,7 @@
 package com.dev.bueno.config;
 
-import com.dev.bueno.security.security.JwtAuthFilter;
-import com.dev.bueno.security.security.JwtService;
+import com.dev.bueno.security.JwtAuthFilter;
+import com.dev.bueno.security.JwtService;
 import com.dev.bueno.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Bean
     public OncePerRequestFilter jwtFilter() {
         return new JwtAuthFilter(usuarioService, jwtService);
@@ -37,19 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String [] PUBLIC_MACHES = {
             "/h2-console/**",
-            "/api/grupos/nome/**",
-            "/api/grupos/todos/**",
-            "/api/grupos/email/**",
-            "/api/grupos/id/**",
-            "/api/grupos/recupera/**",
             "/api/ambiente"
-    };
-
-
-    private static final String [] PUBLIC_MACHES_POST = {
-            "/api/grupos/**",
-            "/api/usuarios/**",
-            "/api/grupos/email/**",
     };
 
 
@@ -61,8 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         http.cors()
                 .and().csrf().disable();
-        http.authorizeRequests().
-                 antMatchers(HttpMethod.POST ,PUBLIC_MACHES_POST).permitAll()
+        http.authorizeRequests()
                 .antMatchers(PUBLIC_MACHES).permitAll()
                 .anyRequest().authenticated();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -72,9 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(usuarioService).passwordEncoder(bCryptPasswordEncoder());
+        auth.userDetailsService(usuarioService).passwordEncoder(bCryptPasswordEncoder);
     }
-    
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -84,11 +74,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .allowedMethods("GET", "POST", "PUT", "DELETE").allowedOrigins("*");
             }
         };
-    }
-
-    @Bean
-    public BCryptPasswordEncoder  bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
 }

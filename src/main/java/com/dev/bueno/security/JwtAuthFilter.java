@@ -1,4 +1,4 @@
-package com.dev.bueno.security.security;
+package com.dev.bueno.security;
 
 import com.dev.bueno.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
