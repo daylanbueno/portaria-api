@@ -40,9 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String [] PUBLIC_MACHES = {
             "/h2-console/**",
-            "/api/ambiente"
+            "/api/ambiente",
+            "/api/usuarios/**",
     };
-
 
     /**
      * Método responsável por controlar o acesso  para os recursos.
