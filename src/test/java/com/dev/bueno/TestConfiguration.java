@@ -14,7 +14,6 @@ import org.springframework.test.context.ContextConfiguration;
         "com.dev.bueno.security",
         "com.dev.bueno.security.JwtService"
 })
-
 public class TestConfiguration {
 
     @Bean
