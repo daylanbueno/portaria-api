@@ -4,6 +4,7 @@ import com.dev.bueno.dto.AuthDto;
 import com.dev.bueno.dto.LoginDto;
 import com.dev.bueno.dto.UsuarioDto;
 import com.dev.bueno.entity.Usuario;
+import com.dev.bueno.exceptions.SenhaOuLoginInvalidoException;
 import com.dev.bueno.repository.UsuarioRepository;
 import com.dev.bueno.security.JwtService;
 import com.dev.bueno.service.impl.UsuarioServiceImpl;
@@ -21,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @Profile("test")
@@ -71,7 +73,7 @@ public class UsuarioServiceTest  {
     }
 
     @Test
-    @DisplayName("deve ser capaz de fazer login")
+    @DisplayName("deve ser capaz de fazer login com sucesso")
     public void deveSerCapazDeFazerLogin() {
         String toke = "CF1E12";
         LoginDto adminUser = LoginDto.builder().email("admin@gmail.com").senha("admin").build();
@@ -90,4 +92,20 @@ public class UsuarioServiceTest  {
         assertEquals(authDto.getEmail(), usuario.getEmail());
     }
 
+    @Test
+    @DisplayName("deve ser capaz de lançar uma exceção quando o usuario não for valido")
+    public void deveTentarFazerLoginComUsuarioInvalido() {
+        LoginDto adminUser = LoginDto.builder().email("admin@gmail.com").senha("admin").build();
+        Usuario usuario = Usuario.builder().nome("Admin").email("admin@gmail.com").admin(true).build();
+
+        Mockito.when(usuarioRepository.findByEmail(adminUser.getEmail())).thenReturn(
+                Optional.of(usuario)
+        );
+
+        Mockito.when(passwordEncoder.matches(adminUser.getSenha(), "8899")).thenReturn(true);
+
+        assertThrows(SenhaOuLoginInvalidoException.class,()-> usuarioService.login(adminUser));
+        Mockito.verify(usuarioRepository, Mockito.times(1)).findByEmail(adminUser.getEmail());
+        Mockito.verify(jwtService, Mockito.never()).gerarToken(usuario);
+    }
 }
