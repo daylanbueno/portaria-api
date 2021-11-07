@@ -57,6 +57,33 @@ public class MoradorServiceTest {
     }
 
     @Test
+    @DisplayName("deve alterar  morador com sucesso")
+    public void deveAlterarMorador() {
+        Morador entity = Morador.builder()
+                .nome("Marcos").celular("99666655").id(10l).endereco("B11").build();
+
+        MoradorDto moradoDto = MoradorDto.builder()
+                .nome("Marcos da Silva").celular("619995588").id(10l).endereco("B19").build();
+
+        Mockito.when(moradorRepository.save(entity)).thenReturn(entity);
+        Mockito.when(modelMapper.map(moradoDto, Morador.class)).thenReturn(entity);
+        Mockito.when(modelMapper.map(entity, MoradorDto.class)).thenReturn(moradoDto);
+
+        MoradorDto novoMorador = moradorService.alterar(moradoDto);
+
+        Assertions.assertEquals(novoMorador.getNome(), moradoDto.getNome());
+        Assertions.assertEquals(novoMorador.getId(), moradoDto.getId());
+    }
+
+    @Test
+    @DisplayName("deve tentar alterar morador sem passa ID")
+    public void deveAlterarMoradorSemId() {
+        MoradorDto moradoDto = MoradorDto.builder()
+                .nome("Marcos da Silva").celular("619995588").endereco("B19").build();
+        Assertions.assertThrows(NegocioException.class, () -> moradorService.alterar(moradoDto));
+    }
+
+    @Test
     @DisplayName("deve ser capaz de obter os morador por ID quando existir")
     public void deveSerCapazDeObterMoradoresPorId() {
         Morador entity = Morador.builder()

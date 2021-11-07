@@ -28,6 +28,18 @@ public class MoradorServiceImpl implements MoradorService {
     }
 
     @Override
+    public MoradorDto alterar(MoradorDto moradorDto) {
+        if (moradorDto.getId() == null) {
+            throw new NegocioException("O ID é obrigatório");
+        }
+
+        Morador entity = modelMapper.map(moradorDto, Morador.class);
+        Morador moradorAlterado = moradorRepository.save(entity);
+
+        return modelMapper.map(moradorAlterado, MoradorDto.class);
+    }
+
+    @Override
     public List<MoradorDto> obterMoradores() {
         return null;
     }
@@ -44,10 +56,6 @@ public class MoradorServiceImpl implements MoradorService {
         return null;
     }
 
-    @Override
-    public MoradorDto alterar(MoradorDto eduardo) {
-        return null;
-    }
 
     @Override
     public void deletarPorId(Long id) {
