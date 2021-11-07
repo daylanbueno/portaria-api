@@ -28,10 +28,4 @@ public class UsuarioController {
     public AuthDto salvar(@RequestBody @Valid LoginDto loginDto) {
         return usuarioService.login(loginDto);
     }
-
-//    @PostMapping("/login-integracao")
-//    public AuthDto salvar(@RequestBody @Valid DtoLoginIntegracao loginDto) {
-//        return usuarioService.login(loginDto);
-//    }
-
 }
