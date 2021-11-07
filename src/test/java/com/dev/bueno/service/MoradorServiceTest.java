@@ -15,6 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
@@ -99,6 +101,26 @@ public class MoradorServiceTest {
 
         Assertions.assertEquals(novoMorador.getNome(), entity.getNome());
         Assertions.assertEquals(novoMorador.getId(), entity.getId());
+    }
+
+    @Test
+    @DisplayName("deve ser capaz de carregar os moradores")
+    public void deveSerCapazDeCarregarMoradoes() {
+        Morador entity = Morador.builder()
+                .nome("Marcos").celular("99666655").id(10l).endereco("B11").build();
+
+        MoradorDto moradoDto = MoradorDto.builder()
+                .nome("Marcos").celular("99666655").id(10l).endereco("B11").build();
+
+        Mockito.when(moradorRepository.findAll()).thenReturn(
+                Arrays.asList(entity)
+        );
+
+        Mockito.when(modelMapper.map(entity, MoradorDto.class)).thenReturn(moradoDto);
+
+        List<MoradorDto> moradores = moradorService.obterMoradores();
+
+        Assertions.assertEquals(1, moradores.size());
     }
 
     @Test

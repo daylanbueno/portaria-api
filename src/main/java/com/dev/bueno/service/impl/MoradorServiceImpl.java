@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +43,12 @@ public class MoradorServiceImpl implements MoradorService {
 
     @Override
     public List<MoradorDto> obterMoradores() {
-        return null;
+        List<Morador> moradores = moradorRepository.findAll();
+
+        List<MoradorDto> resultado = moradores.stream()
+                .map((item) -> modelMapper.map(item, MoradorDto.class)).collect(Collectors.toList());
+
+        return resultado;
     }
 
     @Override
