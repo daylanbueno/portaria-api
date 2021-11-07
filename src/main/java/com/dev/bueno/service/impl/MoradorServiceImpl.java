@@ -29,4 +29,14 @@ public class MoradorServiceImpl implements MoradorService {
     public MoradorDto salvar(MoradorDto eduardo) {
         return null;
     }
+
+    @Override
+    public MoradorDto alterar(MoradorDto eduardo) {
+        return null;
+    }
+
+    @Override
+    public void deletarPorId(Long id) {
+
+    }
 }

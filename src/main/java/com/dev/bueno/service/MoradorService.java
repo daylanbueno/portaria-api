@@ -15,4 +15,8 @@ public interface MoradorService {
     Page<MoradorDto> obterPorFiltro(MoradorFiltroDto build);
 
     MoradorDto salvar(MoradorDto eduardo);
+
+    MoradorDto alterar(MoradorDto eduardo);
+
+    void deletarPorId(Long id);
 }

@@ -71,6 +71,41 @@ public class MoradorControllerTest  extends Specification {
                 .andReturn();
     }
 
+
+    @Test
+    @DisplayName("deve ser capaz de alterar um morador")
+    public void deveSerCapazDeAlterarUmMorador() throws Exception {
+
+        MoradorDto eduardo = MoradorDto.builder()
+                .id(10l)
+                .nome("Dailan")
+                .endereco("Conjunto B lote 18")
+                .celular("6199999999")
+                .build();
+
+        MoradorDto moradorAlterado = MoradorDto.builder()
+                .id(10l)
+                .nome("Dailan Bueno")
+                .endereco("Conjunto B lote 18")
+                .celular("613333333")
+                .build();
+
+        Mockito.when(moradorService.alterar(eduardo)).thenReturn(moradorAlterado);
+
+        RequestBuilder request = MockMvcRequestBuilders.put("/api/moradores")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(eduardo));
+
+        MvcResult result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("id").value(moradorAlterado.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("nome").value(moradorAlterado.getNome()))
+                .andExpect(MockMvcResultMatchers.jsonPath("endereco").value(moradorAlterado.getEndereco()))
+                .andExpect(MockMvcResultMatchers.jsonPath("celular").value(moradorAlterado.getCelular()))
+                .andReturn();
+    }
+
     @Test
     @DisplayName("deve ser capaz de obter uma lista de moradores")
     public void deveObterTodosOsMoradores() throws Exception {
@@ -113,6 +148,19 @@ public class MoradorControllerTest  extends Specification {
     }
 
     @Test
+    @DisplayName("deve deletar um morador dado o seu ID")
+    public void deveSerCapazDeDeletarUmMorador() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/moradores/10")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        MvcResult result  = mockMvc.perform(request)
+                .andExpect(status().isNoContent())
+                .andReturn();
+    }
+
+
+    @Test
     @DisplayName("deve obter moradores por filtro e consulta paginada quando retorna uma pessoa")
     public void deveObterMoradoresPorFiltroConsultaPaginadaDevolveMarcos() throws Exception {
 
@@ -122,6 +170,26 @@ public class MoradorControllerTest  extends Specification {
                     Arrays.asList(marcos), PageRequest.of(1, 10), 10));
 
         RequestBuilder request = MockMvcRequestBuilders.get("/api/moradores/filtro")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        MvcResult result  = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("content[0].id").value(marcos.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("content[0].nome").value(marcos.getNome()))
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("deve obter moradores por nome no filtro dado que existe")
+    public void deveObterMoradoresPorFiltroNomeQuandoExistir() throws Exception {
+
+        MoradorDto marcos = MoradorDto.builder().nome("MARCOS").id(10l).build();
+
+        Mockito.when(moradorService.obterPorFiltro(MoradorFiltroDto.builder().nome("marc").build())).thenReturn(new PageImpl<>(
+                Arrays.asList(marcos), PageRequest.of(1, 10), 10));
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/moradores/filtro?nome=marc")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 

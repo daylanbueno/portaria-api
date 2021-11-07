@@ -23,6 +23,12 @@ public class MoradorController {
         return moradorService.salvar(moradorDto);
     }
 
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public MoradorDto alterar(@RequestBody MoradorDto moradorDto) {
+        return moradorService.alterar(moradorDto);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<MoradorDto> moradores() {
@@ -32,6 +38,12 @@ public class MoradorController {
     @GetMapping("/{id}")
     public MoradorDto obterPorId(@PathVariable Long id) {
         return moradorService.obterPorId(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarPorId(@PathVariable Long id) {
+         moradorService.deletarPorId(id);
     }
 
 
