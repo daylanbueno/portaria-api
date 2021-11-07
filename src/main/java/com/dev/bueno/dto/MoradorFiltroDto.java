@@ -9,11 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MoradorDto {
-    private Long id;
+public class MoradorFiltroDto {
     private String nome;
-    private String endereco;
-    private String enderecoCompleto;
-    private String celular;
-    private String telefone;
 }
