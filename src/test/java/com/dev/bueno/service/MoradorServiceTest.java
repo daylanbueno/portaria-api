@@ -2,6 +2,7 @@ package com.dev.bueno.service;
 
 import com.dev.bueno.dto.MoradorDto;
 import com.dev.bueno.entity.Morador;
+import com.dev.bueno.exceptions.NegocioException;
 import com.dev.bueno.repository.MoradorRepository;
 import com.dev.bueno.service.impl.MoradorServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -56,7 +57,7 @@ public class MoradorServiceTest {
     }
 
     @Test
-    @DisplayName("deve ser capaz de obter os moradores por ID quando existir")
+    @DisplayName("deve ser capaz de obter os morador por ID quando existir")
     public void deveSerCapazDeObterMoradoresPorId() {
         Morador entity = Morador.builder()
                 .nome("Marcos").celular("99666655").id(10l).endereco("B11").build();
@@ -71,5 +72,11 @@ public class MoradorServiceTest {
 
         Assertions.assertEquals(novoMorador.getNome(), entity.getNome());
         Assertions.assertEquals(novoMorador.getId(), entity.getId());
+    }
+
+    @Test
+    @DisplayName("deve ser capaz de obter morador por ID quando não existir")
+    public void deveSerCapazDeObterMoradoresPorIdELancaException() {
+        Assertions.assertThrows(NegocioException.class, () -> moradorService.obterPorId(10l));
     }
 }
