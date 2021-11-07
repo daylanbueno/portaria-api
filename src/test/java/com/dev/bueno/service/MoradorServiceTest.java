@@ -14,6 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 @ExtendWith(SpringExtension.class)
 public class MoradorServiceTest {
 
@@ -48,6 +50,24 @@ public class MoradorServiceTest {
         Mockito.when(modelMapper.map(entity, MoradorDto.class)).thenReturn(moradoDto);
 
         MoradorDto novoMorador = moradorService.salvar(moradoDto);
+
+        Assertions.assertEquals(novoMorador.getNome(), entity.getNome());
+        Assertions.assertEquals(novoMorador.getId(), entity.getId());
+    }
+
+    @Test
+    @DisplayName("deve ser capaz de obter os moradores por ID quando existir")
+    public void deveSerCapazDeObterMoradoresPorId() {
+        Morador entity = Morador.builder()
+                .nome("Marcos").celular("99666655").id(10l).endereco("B11").build();
+
+        MoradorDto moradoDto = MoradorDto.builder()
+                .nome("Marcos").celular("99666655").id(10l).endereco("B11").build();
+
+        Mockito.when(moradorRepository.findById(10l)).thenReturn(Optional.of(entity));
+        Mockito.when(modelMapper.map(entity, MoradorDto.class)).thenReturn(moradoDto);
+
+        MoradorDto novoMorador = moradorService.obterPorId(10l);
 
         Assertions.assertEquals(novoMorador.getNome(), entity.getNome());
         Assertions.assertEquals(novoMorador.getId(), entity.getId());

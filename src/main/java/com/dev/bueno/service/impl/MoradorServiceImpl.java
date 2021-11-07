@@ -3,6 +3,7 @@ package com.dev.bueno.service.impl;
 import com.dev.bueno.dto.MoradorDto;
 import com.dev.bueno.dto.MoradorFiltroDto;
 import com.dev.bueno.entity.Morador;
+import com.dev.bueno.exceptions.NegocioException;
 import com.dev.bueno.repository.MoradorRepository;
 import com.dev.bueno.service.MoradorService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,9 @@ public class MoradorServiceImpl implements MoradorService {
 
     @Override
     public MoradorDto obterPorId(Long id) {
-        return null;
+        Morador entity = moradorRepository
+                .findById(id).orElseThrow(() -> new NegocioException("O morador não encontrado!"));
+        return modelMapper.map(entity, MoradorDto.class);
     }
 
     @Override
