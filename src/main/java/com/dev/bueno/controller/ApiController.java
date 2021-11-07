@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class ApiController {
 
-    @Value("${PROFILE}")
+    @Value("${spring.profiles.active}")
     private String ambiente;
 
     @GetMapping("/ambiente")
