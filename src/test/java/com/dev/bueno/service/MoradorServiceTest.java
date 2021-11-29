@@ -1,6 +1,7 @@
 package com.dev.bueno.service;
 
 import com.dev.bueno.dto.MoradorDto;
+import com.dev.bueno.dto.MoradorFiltroDto;
 import com.dev.bueno.entity.Morador;
 import com.dev.bueno.exceptions.NegocioException;
 import com.dev.bueno.repository.MoradorRepository;
@@ -13,6 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -127,5 +132,28 @@ public class MoradorServiceTest {
     @DisplayName("deve ser capaz de obter morador por ID quando não existir")
     public void deveSerCapazDeObterMoradoresPorIdELancaException() {
         Assertions.assertThrows(NegocioException.class, () -> moradorService.obterPorId(10l));
+    }
+
+    @Test
+    @DisplayName("deve ser capaz de obter morador por filtro")
+    public void deveObterMoradorPorFiltro() {
+        Pageable pageable = PageRequest.of(1,10);
+        Morador morador1 = Morador.builder().nome("DAILAN SILVA LIMA").id(10l).endereco("B11").build();
+        MoradorDto moradorDto = MoradorDto.builder().nome("DAILAN SILVA LIMA").id(10l).endereco("B11").build();
+        List<Morador> moradores = Arrays.asList(morador1);
+
+        MoradorFiltroDto filtroDto = MoradorFiltroDto.builder().nome("dailan").build();
+
+        Mockito.when(moradorRepository.findByNome(filtroDto.getNome(), pageable))
+                .thenReturn(new PageImpl<Morador>(moradores, pageable, moradores.size()));
+
+        Mockito.when(modelMapper.map(morador1,MoradorDto.class)).thenReturn(moradorDto);
+
+        Page<MoradorDto> resultado = moradorService.obterPorFiltro(filtroDto, pageable);
+
+        Assertions.assertEquals(1, resultado.getContent().size());
+        Assertions.assertEquals(10l, resultado.getContent().get(0).getId());
+        Assertions.assertEquals(moradores.get(0).getEndereco(), resultado.getContent().get(0).getEndereco());
+
     }
 }
