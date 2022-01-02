@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 @Data
@@ -13,6 +15,9 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Morador {
+
+    @Id
+    @GeneratedValue
     private Long id;
     private String nome;
     private String endereco;
