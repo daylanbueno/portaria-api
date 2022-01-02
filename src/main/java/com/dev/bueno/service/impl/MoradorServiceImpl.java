@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +72,8 @@ public class MoradorServiceImpl implements MoradorService {
 
     @Override
     public void deletarPorId(Long id) {
-
+       moradorRepository.findById(id).orElseThrow(
+                () -> new NegocioException("Não existe um morador para o ID informado"));
+        moradorRepository.deleteById(id);
     }
 }

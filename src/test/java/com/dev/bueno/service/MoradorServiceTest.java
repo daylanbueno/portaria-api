@@ -156,4 +156,25 @@ public class MoradorServiceTest {
         Assertions.assertEquals(moradores.get(0).getEndereco(), resultado.getContent().get(0).getEndereco());
 
     }
+
+    @Test
+    @DisplayName("deve ser capaz de deletar um morador por com sucesso")
+    public void deveDeletarUmMoradorPorId() {
+       Long id = 10l;
+       Morador eduardo = Morador.builder().id(10l).nome("Eduardo").build();
+       Mockito.when(moradorRepository.findById(id)).thenReturn(Optional.of(eduardo));
+       Mockito.doNothing().when(moradorRepository).deleteById(id);
+       moradorService.deletarPorId(id);
+       Mockito.verify(moradorRepository, Mockito.times(1)).deleteById(id);
+    }
+
+    @Test
+    @DisplayName("deve deve tentar deletar morador quando nao existir")
+    public void deveDeletarMoradorQuandoNaoExistir() {
+        Long id = 10l;
+        Mockito.when(moradorRepository.findById(id)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(NegocioException.class, () ->  moradorService.deletarPorId(id));
+        Mockito.verify(moradorRepository, Mockito.never()).deleteById(id);
+    }
 }
