@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class MoradorServiceImpl implements MoradorService {
 
-    private final  MoradorRepository moradorRepository;
+    private final MoradorRepository moradorRepository;
     private final ModelMapper modelMapper;
 
     @Override
