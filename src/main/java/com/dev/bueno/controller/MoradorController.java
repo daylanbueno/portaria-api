@@ -5,6 +5,8 @@ import com.dev.bueno.dto.MoradorFiltroDto;
 import com.dev.bueno.service.MoradorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +50,7 @@ public class MoradorController {
 
 
     @GetMapping("/filtro")
-    public Page<MoradorDto> obterPorFiltro(MoradorFiltroDto filtroDto) {
-        return moradorService.obterPorFiltro(filtroDto);
+    public Page<MoradorDto> obterPorFiltro(MoradorFiltroDto filtroDto, Integer page, Integer size) {
+        return moradorService.obterPorFiltro(filtroDto, PageRequest.of(page, size));
     }
 }

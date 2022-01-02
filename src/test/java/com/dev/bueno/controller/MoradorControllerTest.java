@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,7 +36,6 @@ public class MoradorControllerTest  extends Specification {
 
     @MockBean
     private MoradorService moradorService;
-
 
     @Test
     @DisplayName("deve ser capaz de cadastrar um novo morador")
@@ -69,7 +69,6 @@ public class MoradorControllerTest  extends Specification {
                 .andExpect(MockMvcResultMatchers.jsonPath("celular").value(novoMorador.getCelular()))
                 .andReturn();
     }
-
 
     @Test
     @DisplayName("deve ser capaz de alterar um morador")
@@ -158,17 +157,19 @@ public class MoradorControllerTest  extends Specification {
                 .andReturn();
     }
 
-
     @Test
     @DisplayName("deve obter moradores por filtro e consulta paginada quando retorna uma pessoa")
     public void deveObterMoradoresPorFiltroConsultaPaginadaDevolveMarcos() throws Exception {
 
         MoradorDto marcos = MoradorDto.builder().nome("MARCOS").id(10l).build();
 
-        Mockito.when(moradorService.obterPorFiltro(MoradorFiltroDto.builder().build())).thenReturn(new PageImpl<>(
+        Mockito.when(moradorService.obterPorFiltro(
+                MoradorFiltroDto.builder().build(),
+                PageRequest.of(1, 10)
+        )).thenReturn(new PageImpl<>(
                     Arrays.asList(marcos), PageRequest.of(1, 10), 10));
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/api/moradores/filtro")
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/moradores/filtro?page=1&size=10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -185,10 +186,13 @@ public class MoradorControllerTest  extends Specification {
 
         MoradorDto marcos = MoradorDto.builder().nome("MARCOS").id(10l).build();
 
-        Mockito.when(moradorService.obterPorFiltro(MoradorFiltroDto.builder().nome("marc").build())).thenReturn(new PageImpl<>(
+        Mockito.when(moradorService.obterPorFiltro(
+                MoradorFiltroDto.builder().nome("marc").build(),
+                PageRequest.of(1, 10)
+        )).thenReturn(new PageImpl<>(
                 Arrays.asList(marcos), PageRequest.of(1, 10), 10));
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/api/moradores/filtro?nome=marc")
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/moradores/filtro?nome=marc&page=1&size=10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 

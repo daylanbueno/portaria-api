@@ -9,6 +9,8 @@ import com.dev.bueno.service.MoradorService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,10 +61,15 @@ public class MoradorServiceImpl implements MoradorService {
     }
 
     @Override
-    public Page<MoradorDto> obterPorFiltro(MoradorFiltroDto build) {
-        return null;
-    }
+    public Page<MoradorDto> obterPorFiltro(MoradorFiltroDto filtro, Pageable pageable) {
+        Page<Morador> moradores = moradorRepository.findByNome(filtro.getNome(), pageable);
 
+        List<MoradorDto> resultado = moradores.stream().map((entity) -> {
+            return modelMapper.map(entity, MoradorDto.class);
+        }).collect(Collectors.toList());
+
+        return new PageImpl<MoradorDto>(resultado, pageable, moradores.getTotalElements());
+    }
 
     @Override
     public void deletarPorId(Long id) {
