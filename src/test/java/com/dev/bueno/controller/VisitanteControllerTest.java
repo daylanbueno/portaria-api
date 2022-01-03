@@ -120,5 +120,17 @@ public class VisitanteControllerTest extends Specification {
                 .andReturn();
     }
 
+    @Test
+    @DisplayName("deve deletar um visitante dado o seu ID")
+    public void deveSerCapazDeDeletarUmMorador() throws Exception {
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/visitantes/10")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        MvcResult result  = mockMvc.perform(request)
+                .andExpect(status().isNoContent())
+                .andReturn();
+    }
+
 
 }

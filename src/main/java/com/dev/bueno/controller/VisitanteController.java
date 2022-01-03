@@ -28,6 +28,12 @@ public class VisitanteController {
         return visitanteService.alterar(visitanteDto);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void alterar(@PathVariable("id") Long id) {
+        visitanteService.deletePorId(id);
+    }
+
     @GetMapping("/{rg}")
     public VisitanteDto obterPorRg(@PathVariable String rg) {
         return visitanteService.obterPorRg(rg);

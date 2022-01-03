@@ -14,4 +14,6 @@ public interface VisitanteService {
     Page<VisitanteDto> obterPorFiltro(VisitanteFiltroDto visitanteFiltroDto, Pageable pageable);
 
     VisitanteDto alterar(VisitanteDto visitanteDto);
+
+    void deletePorId(Long id);
 }
