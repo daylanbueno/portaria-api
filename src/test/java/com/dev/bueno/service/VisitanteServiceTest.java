@@ -1,10 +1,7 @@
 package com.dev.bueno.service;
 
-import com.dev.bueno.dto.MoradorDto;
-import com.dev.bueno.dto.MoradorFiltroDto;
 import com.dev.bueno.dto.VisitanteDto;
 import com.dev.bueno.dto.VisitanteFiltroDto;
-import com.dev.bueno.entity.Morador;
 import com.dev.bueno.entity.Visitante;
 import com.dev.bueno.exceptions.NegocioException;
 import com.dev.bueno.repository.VisitanteRepository;
@@ -127,7 +124,6 @@ public class VisitanteServiceTest {
         Assertions.assertEquals(edu.getNome(), visitanteDto.getNome());
     }
 
-
     @Test
     @DisplayName("deve obter visitante por RG quando nao existir")
     public void deveTentarObterVisitantePorIdQuandoNaoExistir() {
@@ -160,10 +156,9 @@ public class VisitanteServiceTest {
 
     }
 
-
     @Test
     @DisplayName("deve ser capaz de deletar um visitante por ID com sucesso")
-    public void deveDeletarUmMoradorPorId() {
+    public void deveDeletarUmVisitantePorId() {
         Long id = 10l;
         Visitante eduardo = Visitante.builder().id(10l).nome("Eduardo").build();
         Mockito.when(visitanteRepository.findById(id)).thenReturn(Optional.of(eduardo));
@@ -174,7 +169,7 @@ public class VisitanteServiceTest {
 
     @Test
     @DisplayName("deve tentar deletar um visitante quando nao existir")
-    public void deveDeletarMoradorQuandoNaoExistir() {
+    public void deveDeletarVisitanteQuandoNaoExistir() {
         Long id = 10l;
         Mockito.when(visitanteRepository.findById(id)).thenReturn(Optional.empty());
 
