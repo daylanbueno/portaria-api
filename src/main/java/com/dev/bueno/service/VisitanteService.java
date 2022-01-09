@@ -11,9 +11,10 @@ public interface VisitanteService {
 
     VisitanteDto obterPorRg(String rg);
 
-    Page<VisitanteDto> obterPorFiltro(VisitanteFiltroDto visitanteFiltroDto, Pageable pageable);
-
     VisitanteDto alterar(VisitanteDto visitanteDto);
 
     void deletePorId(Long id);
+
+    Page<VisitanteDto> obterPorFiltro(VisitanteFiltroDto visitanteFiltroDto, Pageable pageable);
+
 }

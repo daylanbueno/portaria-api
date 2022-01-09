@@ -27,19 +27,22 @@ public class VisitanteServiceImpl implements VisitanteService {
     }
 
     @Override
+    public VisitanteDto alterar(VisitanteDto visitanteDto) {
+        Visitante visitanteEntity  = modelMapper.map(visitanteDto, Visitante.class);
+        Visitante visitanteAlterado = visitanteRepository.save(visitanteEntity);
+        return modelMapper.map(visitanteAlterado, VisitanteDto.class);
+    }
+
+    @Override
     public VisitanteDto obterPorRg(String rg) {
         Visitante visitante = visitanteRepository.findByRg(rg);
         if (visitante == null) throw new NegocioException("Visitante não encontrado");
         return modelMapper.map(visitante, VisitanteDto.class);
     }
 
-    @Override
-    public Page<VisitanteDto> obterPorFiltro(VisitanteFiltroDto visitanteFiltroDto, Pageable pageable) {
-        return null;
-    }
 
     @Override
-    public VisitanteDto alterar(VisitanteDto visitanteDto) {
+    public Page<VisitanteDto> obterPorFiltro(VisitanteFiltroDto visitanteFiltroDto, Pageable pageable) {
         return null;
     }
 
