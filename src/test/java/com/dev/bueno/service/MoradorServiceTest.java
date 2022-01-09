@@ -158,7 +158,7 @@ public class MoradorServiceTest {
     }
 
     @Test
-    @DisplayName("deve ser capaz de deletar um morador por com sucesso")
+    @DisplayName("deve ser capaz de deletar um morador por ID com sucesso")
     public void deveDeletarUmMoradorPorId() {
        Long id = 10l;
        Morador eduardo = Morador.builder().id(10l).nome("Eduardo").build();

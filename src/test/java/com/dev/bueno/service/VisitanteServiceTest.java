@@ -129,7 +129,25 @@ public class VisitanteServiceTest {
         Assertions.assertThrows(NegocioException.class, () ->  visitanteService.obterPorRg("199999"));
     }
 
+    @Test
+    @DisplayName("deve ser capaz de deletar um visitante por ID com sucesso")
+    public void deveDeletarUmMoradorPorId() {
+        Long id = 10l;
+        Visitante eduardo = Visitante.builder().id(10l).nome("Eduardo").build();
+        Mockito.when(visitanteRepository.findById(id)).thenReturn(Optional.of(eduardo));
+        Mockito.doNothing().when(visitanteRepository).deleteById(id);
+        visitanteService.deletePorId(id);
+        Mockito.verify(visitanteRepository, Mockito.times(1)).deleteById(id);
+    }
 
+    @Test
+    @DisplayName("deve tentar deletar um visitante quando nao existir")
+    public void deveDeletarMoradorQuandoNaoExistir() {
+        Long id = 10l;
+        Mockito.when(visitanteRepository.findById(id)).thenReturn(Optional.empty());
 
+        Assertions.assertThrows(NegocioException.class, () ->  visitanteService.deletePorId(id));
+        Mockito.verify(visitanteRepository, Mockito.never()).deleteById(id);
+    }
 
 }

@@ -44,7 +44,6 @@ public class VisitanteServiceImpl implements VisitanteService {
         return modelMapper.map(visitante, VisitanteDto.class);
     }
 
-
     @Override
     public Page<VisitanteDto> obterPorFiltro(VisitanteFiltroDto visitanteFiltroDto, Pageable pageable) {
         return null;
@@ -52,6 +51,9 @@ public class VisitanteServiceImpl implements VisitanteService {
 
     @Override
     public void deletePorId(Long id) {
-
+        Visitante visitante = visitanteRepository.findById(id).orElseThrow(()
+                -> new NegocioException("Visitante para o ID não encontrado"));
+        visitanteRepository.deleteById(visitante.getId());
     }
+
 }
