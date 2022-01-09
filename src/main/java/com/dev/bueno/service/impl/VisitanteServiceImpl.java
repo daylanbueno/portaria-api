@@ -3,6 +3,7 @@ package com.dev.bueno.service.impl;
 import com.dev.bueno.dto.VisitanteDto;
 import com.dev.bueno.dto.VisitanteFiltroDto;
 import com.dev.bueno.entity.Visitante;
+import com.dev.bueno.exceptions.NegocioException;
 import com.dev.bueno.repository.VisitanteRepository;
 import com.dev.bueno.service.VisitanteService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class VisitanteServiceImpl implements VisitanteService {
     @Override
     public VisitanteDto obterPorRg(String rg) {
         Visitante visitante = visitanteRepository.findByRg(rg);
+        if (visitante == null) throw new NegocioException("Visitante não encontrado");
         return modelMapper.map(visitante, VisitanteDto.class);
     }
 

@@ -2,6 +2,7 @@ package com.dev.bueno.service;
 
 import com.dev.bueno.dto.VisitanteDto;
 import com.dev.bueno.entity.Visitante;
+import com.dev.bueno.exceptions.NegocioException;
 import com.dev.bueno.repository.VisitanteRepository;
 import com.dev.bueno.service.impl.VisitanteServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -70,13 +71,24 @@ public class VisitanteServiceTest {
                 .nome("Eduardo").rg("12345").id(10l).build();
 
         Mockito.when(visitanteRepository.findByRg("12345")).thenReturn(edu);
-        Mockito.when(modelMapper.map(eduDTO, Visitante.class)).thenReturn(edu);
         Mockito.when(modelMapper.map(edu, VisitanteDto.class)).thenReturn(eduDTO);
 
         VisitanteDto visitanteDto = visitanteService.obterPorRg("12345");
 
         Assertions.assertEquals(edu.getId(), visitanteDto.getId());
         Assertions.assertEquals(edu.getNome(), visitanteDto.getNome());
+    }
+
+
+    @Test
+    @DisplayName("deve obter visitante por RG quando nao existir")
+    public void deveTentarObterVisitantePorIdQuandoNaoExistir() {
+
+        VisitanteDto eduDTO = VisitanteDto.builder()
+                .nome("Eduardo").rg("12345").id(10l).build();
+
+        Mockito.when(visitanteRepository.findByRg("12345")).thenReturn(null);
+        Assertions.assertThrows(NegocioException.class, () ->  visitanteService.obterPorRg("199999"));
     }
 
 
