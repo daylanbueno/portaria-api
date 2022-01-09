@@ -15,6 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 @ExtendWith(SpringExtension.class)
 public class VisitanteServiceTest {
 
@@ -73,6 +75,7 @@ public class VisitanteServiceTest {
 
 
         Mockito.when(visitanteRepository.save(edu)).thenReturn(edu);
+        Mockito.when(visitanteRepository.findById(10l)).thenReturn(Optional.of(edu));
         Mockito.when(modelMapper.map(visitanteDto, Visitante.class)).thenReturn(edu);
         Mockito.when(modelMapper.map(edu, VisitanteDto.class)).thenReturn(novoVisitanteDto);
 
@@ -82,6 +85,17 @@ public class VisitanteServiceTest {
         Assertions.assertEquals(novoVisitanteDto.getNome(), visitanteAlterado.getNome());
     }
 
+    @Test
+    @DisplayName("deve tentar alterar um visitante que nao existe")
+    public void alterarVisitanteNaoExistente() {
+
+        VisitanteDto eduDTO = VisitanteDto.builder()
+                .nome("Eduardo").rg("12345").id(10l).build();
+
+        Mockito.when(visitanteRepository.findById(10l)).thenReturn(Optional.empty());
+        Assertions.assertThrows(NegocioException.class, () ->  visitanteService.alterar(eduDTO));
+
+    }
 
     @Test
     @DisplayName("deve obter visitante por RG")

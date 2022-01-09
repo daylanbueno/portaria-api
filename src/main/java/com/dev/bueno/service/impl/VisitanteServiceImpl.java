@@ -28,7 +28,11 @@ public class VisitanteServiceImpl implements VisitanteService {
 
     @Override
     public VisitanteDto alterar(VisitanteDto visitanteDto) {
+        visitanteRepository.findById(visitanteDto.getId()).orElseThrow(() ->
+                new NegocioException("Visitante com ID informado não existe"));
+
         Visitante visitanteEntity  = modelMapper.map(visitanteDto, Visitante.class);
+
         Visitante visitanteAlterado = visitanteRepository.save(visitanteEntity);
         return modelMapper.map(visitanteAlterado, VisitanteDto.class);
     }
