@@ -9,7 +9,7 @@ public interface VisitanteService {
 
     VisitanteDto salvar(VisitanteDto visitanteDto);
 
-    VisitanteDto obterPorRg(String id);
+    VisitanteDto obterPorRg(String rg);
 
     Page<VisitanteDto> obterPorFiltro(VisitanteFiltroDto visitanteFiltroDto, Pageable pageable);
 

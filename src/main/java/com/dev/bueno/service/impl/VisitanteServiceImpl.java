@@ -27,7 +27,8 @@ public class VisitanteServiceImpl implements VisitanteService {
 
     @Override
     public VisitanteDto obterPorRg(String rg) {
-        return null;
+        Visitante visitante = visitanteRepository.findByRg(rg);
+        return modelMapper.map(visitante, VisitanteDto.class);
     }
 
     @Override

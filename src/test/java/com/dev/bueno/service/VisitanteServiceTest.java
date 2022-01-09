@@ -58,5 +58,26 @@ public class VisitanteServiceTest {
         Assertions.assertEquals(edu.getNome(), novoVisitante.getNome());
     }
 
+    @Test
+    @DisplayName("deve obter visitante por RG")
+    public void deveObterVisitantePorRg() {
+
+        Visitante edu = Visitante
+                .builder().nome("Eduardo").id(10l)
+                .rg("12345").build();
+
+        VisitanteDto eduDTO = VisitanteDto.builder()
+                .nome("Eduardo").rg("12345").id(10l).build();
+
+        Mockito.when(visitanteRepository.findByRg("12345")).thenReturn(edu);
+        Mockito.when(modelMapper.map(eduDTO, Visitante.class)).thenReturn(edu);
+        Mockito.when(modelMapper.map(edu, VisitanteDto.class)).thenReturn(eduDTO);
+
+        VisitanteDto visitanteDto = visitanteService.obterPorRg("12345");
+
+        Assertions.assertEquals(edu.getId(), visitanteDto.getId());
+        Assertions.assertEquals(edu.getNome(), visitanteDto.getNome());
+    }
+
 
 }
