@@ -1,6 +1,10 @@
 package com.dev.bueno.service;
 
+import com.dev.bueno.dto.MoradorDto;
+import com.dev.bueno.dto.MoradorFiltroDto;
 import com.dev.bueno.dto.VisitanteDto;
+import com.dev.bueno.dto.VisitanteFiltroDto;
+import com.dev.bueno.entity.Morador;
 import com.dev.bueno.entity.Visitante;
 import com.dev.bueno.exceptions.NegocioException;
 import com.dev.bueno.repository.VisitanteRepository;
@@ -13,8 +17,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
@@ -130,6 +140,28 @@ public class VisitanteServiceTest {
     }
 
     @Test
+    @DisplayName("deve ser capaz de obter visitante por filtro quando nao existir")
+    public void deveObterVisitantePorFiltroQuandoNaoExistir() {
+        Pageable pageable = PageRequest.of(1,10);
+        Visitante visitante1 = Visitante.builder().nome("DAILAN SILVA LIMA").id(10l).build();
+        VisitanteDto visitanteDto = VisitanteDto.builder().nome("DAILAN SILVA LIMA").id(10l).build();
+        List<Visitante> visitantes = Arrays.asList(visitante1);
+
+        VisitanteFiltroDto filtroDto = VisitanteFiltroDto.builder().nome("dailan").build();
+
+        Mockito.when(visitanteRepository.findAll(filtroDto.toSpecification(), pageable))
+                .thenReturn(new PageImpl<Visitante>(visitantes, pageable, visitantes.size()));
+
+        Mockito.when(modelMapper.map(visitante1,VisitanteDto.class)).thenReturn(visitanteDto);
+
+        Page<VisitanteDto> resultado = visitanteService.obterPorFiltro(filtroDto, pageable);
+
+        Assertions.assertEquals(0, resultado.getContent().size());
+
+    }
+
+
+    @Test
     @DisplayName("deve ser capaz de deletar um visitante por ID com sucesso")
     public void deveDeletarUmMoradorPorId() {
         Long id = 10l;
@@ -149,5 +181,6 @@ public class VisitanteServiceTest {
         Assertions.assertThrows(NegocioException.class, () ->  visitanteService.deletePorId(id));
         Mockito.verify(visitanteRepository, Mockito.never()).deleteById(id);
     }
+
 
 }

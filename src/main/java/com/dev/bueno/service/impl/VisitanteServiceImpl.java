@@ -9,8 +9,13 @@ import com.dev.bueno.service.VisitanteService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +51,16 @@ public class VisitanteServiceImpl implements VisitanteService {
 
     @Override
     public Page<VisitanteDto> obterPorFiltro(VisitanteFiltroDto visitanteFiltroDto, Pageable pageable) {
-        return null;
+        Page<Visitante> resultado =
+                visitanteRepository.findAll(visitanteFiltroDto.toSpecification(), pageable);
+
+        if (resultado == null) return  new PageImpl<VisitanteDto>(new ArrayList<>(), Pageable.unpaged(), 0);
+
+        List<VisitanteDto> visitantes = resultado.getContent().stream()
+                .map((entity) -> modelMapper.map(entity, VisitanteDto.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<VisitanteDto>(visitantes, pageable, resultado.getTotalElements());
     }
 
     @Override
