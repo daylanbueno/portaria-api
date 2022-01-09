@@ -2,6 +2,7 @@ package com.dev.bueno;
 
 import com.dev.bueno.repository.MoradorRepository;
 import com.dev.bueno.repository.UsuarioRepository;
+import com.dev.bueno.repository.VisitanteRepository;
 import com.dev.bueno.security.JwtService;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
@@ -21,11 +22,17 @@ public class TestConfiguration {
 
     @Bean
     public UsuarioRepository UsuarioRepository() {
-        return  Mockito.mock(UsuarioRepository.class);
+        return Mockito.mock(UsuarioRepository.class);
     }
 
     @Bean
     public MoradorRepository moradorRepository() {
         return  Mockito.mock(MoradorRepository.class);
     }
+
+    @Bean
+    public VisitanteRepository visitanteRepository() {
+        return  Mockito.mock(VisitanteRepository.class);
+    }
+
 }
