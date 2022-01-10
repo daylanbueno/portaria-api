@@ -2,6 +2,7 @@ package com.dev.bueno;
 
 import com.dev.bueno.repository.MoradorRepository;
 import com.dev.bueno.repository.UsuarioRepository;
+import com.dev.bueno.repository.VisitaRepository;
 import com.dev.bueno.repository.VisitanteRepository;
 import com.dev.bueno.security.JwtService;
 import org.mockito.Mockito;
@@ -35,4 +36,8 @@ public class TestConfiguration {
         return  Mockito.mock(VisitanteRepository.class);
     }
 
+    @Bean
+    public VisitaRepository visitaRepository() {
+        return  Mockito.mock(VisitaRepository.class);
+    }
 }
